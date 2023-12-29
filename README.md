@@ -30,9 +30,10 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
     echo "Vision Result: $result\n";
     ```
 
-5. Use the `chat` method to engage in a conversation. The `history` property stores the conversation history:
+5. Use the `chat` method to engage in a conversation. The `history` property stores the conversation history, and `decodedResponse` contains the raw API response. Start the conversation with a user message, and you can continue by passing the updated history to the `chat` method:
 
     ```php
+    // Initial user message to start the conversation
     $conversation = array(
         array(
             'role' => 'user',
@@ -42,14 +43,16 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
                 )
             )
         ),
-        array(
-            'role' => 'model',
-            'parts' => array(
-                array(
-                    'text' => 'In the bustling city of Meadow brook, lived a young girl named Sophie. She was a bright and curious soul with an imaginative mind.'
-                )
-            )
-        ),
+    );
+
+    // Send the user message to the Gemini API
+    $result = $geminiAPI->chat($conversation);
+    echo "Chat Result: $result\n";
+    echo "Initial Conversation History: " . json_encode($geminiAPI->history) . "\n";
+    echo "Decoded API Response: " . json_encode($geminiAPI->decodedResponse) . "\n";
+
+    // Continue the conversation by adding model and user messages to the history
+    $conversation = array_merge($geminiAPI->history,
         array(
             'role' => 'user',
             'parts' => array(
@@ -57,12 +60,17 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
                     'text' => 'Can you set it in a quiet village in 1600s France?'
                 )
             )
-        ),
+        )
     );
 
+    // Continue the conversation by passing the updated history
     $result = $geminiAPI->chat($conversation);
     echo "Chat Result: $result\n";
+    echo "Updated Conversation History: " . json_encode($geminiAPI->history) . "\n";
+    echo "Decoded API Response: " . json_encode($geminiAPI->decodedResponse) . "\n";
     ```
+
+This way, the conversation starts with a user message, and subsequent interactions can be easily added by extending the `$conversation` array and passing it to the `chat` method again.
 
 ## Important Note
 

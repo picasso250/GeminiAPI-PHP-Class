@@ -1,6 +1,6 @@
 # GeminiAPI PHP Class
 
-The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on input text and retrieve the most important result from the API response. Additionally, it supports a `vision` method for processing image requests.
+The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on input text and retrieve the most important result from the API response. Additionally, it supports a `vision` method for processing image requests and a `chat` method for engaging in conversational interactions.
 
 ## Usage
 
@@ -28,6 +28,40 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
     $imageContents = file_get_contents('path/to/your/image.jpg');
     $result = $geminiAPI->vision($textForVision, $imageContents);
     echo "Vision Result: $result\n";
+    ```
+
+5. Use the `chat` method to engage in a conversation. The `history` property stores the conversation history:
+
+    ```php
+    $conversation = array(
+        array(
+            'role' => 'user',
+            'parts' => array(
+                array(
+                    'text' => 'Write the first line of a story about a magic backpack.'
+                )
+            )
+        ),
+        array(
+            'role' => 'model',
+            'parts' => array(
+                array(
+                    'text' => 'In the bustling city of Meadow brook, lived a young girl named Sophie. She was a bright and curious soul with an imaginative mind.'
+                )
+            )
+        ),
+        array(
+            'role' => 'user',
+            'parts' => array(
+                array(
+                    'text' => 'Can you set it in a quiet village in 1600s France?'
+                )
+            )
+        ),
+    );
+
+    $result = $geminiAPI->chat($conversation);
+    echo "Chat Result: $result\n";
     ```
 
 ## Important Note

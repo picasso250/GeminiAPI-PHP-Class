@@ -4,6 +4,7 @@ class GeminiAPI {
 
     private $api_key;
     public $decodedResponse;
+    public $history;
 
     public function __construct($api_key) {
         $this->api_key = $api_key;
@@ -53,6 +54,16 @@ class GeminiAPI {
         return $this->sendRequest($url, $data);
     }
 
+    public function chat($conversation) {
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $this->api_key;
+
+        $data = array(
+            'contents' => $conversation
+        );
+
+        return $this->sendRequest($url, $data);
+    }
+
     private function sendRequest($url, $data) {
         $json_data = json_encode($data);
 
@@ -79,6 +90,8 @@ class GeminiAPI {
         if ($this->decodedResponse === null) {
             throw new Exception('Unable to decode JSON response');
         }
+
+        $this->history = $this->decodedResponse['candidates'][0]['content'];
 
         return $this->getMostImportantResult();
     }

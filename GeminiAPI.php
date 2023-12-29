@@ -9,8 +9,28 @@ class GeminiAPI {
         $this->api_key = $api_key;
     }
 
-    public function generateContent($text = null, $imageData = null) {
+    public function generateContent($text) {
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $this->api_key;
+
+        $data = array(
+            'contents' => array(
+                array(
+                    'parts' => array(
+                        array(
+                            'text' => $text
+                        )
+                    )
+                )
+            )
+        );
+
+        return $this->sendRequest($url, $data);
+    }
+
+    public function vision($text, $imageContents) {
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=' . $this->api_key;
+
+        $imageData = base64_encode($imageContents);
 
         $data = array(
             'contents' => array(
@@ -22,7 +42,7 @@ class GeminiAPI {
                         array(
                             'inline_data' => array(
                                 'mime_type' => 'image/jpeg',
-                                'data' => base64_encode($imageData)
+                                'data' => $imageData
                             )
                         )
                     )
@@ -30,6 +50,10 @@ class GeminiAPI {
             )
         );
 
+        return $this->sendRequest($url, $data);
+    }
+
+    private function sendRequest($url, $data) {
         $json_data = json_encode($data);
 
         $headers = array(

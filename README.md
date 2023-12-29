@@ -1,6 +1,6 @@
 # GeminiAPI PHP Class
 
-The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on either text or image input and retrieve the most important result from the API response.
+The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on input text and retrieve the most important result from the API response. Additionally, it supports a `vision` method for processing image requests.
 
 ## Usage
 
@@ -13,35 +13,26 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
     $geminiAPI = new GeminiAPI($api_key);
     ```
 
-3. Use the `generateContent` method to send a request to the Gemini API:
-
-    - For text input:
+3. Use the `generateContent` method to send a request to the Gemini API with the text input "Write a story about a magic backpack.":
 
     ```php
-    $text = 'What is this picture?';
+    $text = 'Write a story about a magic backpack.';
     $result = $geminiAPI->generateContent($text);
+    echo "Generate Content Result: $result\n";
     ```
 
-    - For image input:
+4. Use the `vision` method to send a request to the Gemini API with the text input "What is this picture?" and the image input following the example code:
 
     ```php
-    // Ensure that the image does not exceed the maximum width/height of 512px
-    $imageData = file_get_contents('image.jpg');
-    $result = $geminiAPI->generateContent(null, $imageData);
+    $textForVision = 'What is this picture?';
+    $imageContents = file_get_contents('path/to/your/image.jpg');
+    $result = $geminiAPI->vision($textForVision, $imageContents);
+    echo "Vision Result: $result\n";
     ```
 
-4. The result will contain the concatenated 'text' parts from the API response:
-
-    ```php
-    echo $result;
-    ```
-
-## Important Notes
+## Important Note
 
 - Ensure that cURL is enabled in your PHP configuration.
-
-- Image data is base64-encoded before being included in the JSON request.
-
 - The maximum width/height for images is 512 pixels.
 
 ## License

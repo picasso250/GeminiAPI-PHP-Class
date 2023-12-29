@@ -9,8 +9,8 @@ class GeminiAPI {
         $this->api_key = $api_key;
     }
 
-    public function generateContent($text) {
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $this->api_key;
+    public function generateContent($text = null, $imageData = null) {
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=' . $this->api_key;
 
         $data = array(
             'contents' => array(
@@ -18,6 +18,12 @@ class GeminiAPI {
                     'parts' => array(
                         array(
                             'text' => $text
+                        ),
+                        array(
+                            'inline_data' => array(
+                                'mime_type' => 'image/jpeg',
+                                'data' => base64_encode($imageData)
+                            )
                         )
                     )
                 )

@@ -1,6 +1,6 @@
 # GeminiAPI PHP Class
 
-The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on the input text and retrieve the most important result from the API response.
+The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on either text or image input and retrieve the most important result from the API response.
 
 ## Usage
 
@@ -15,9 +15,19 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
 
 3. Use the `generateContent` method to send a request to the Gemini API:
 
+    - For text input:
+
     ```php
-    $text = 'Write a story about a magic backpack.';
+    $text = 'What is this picture?';
     $result = $geminiAPI->generateContent($text);
+    ```
+
+    - For image input:
+
+    ```php
+    // Ensure that the image does not exceed the maximum width/height of 512px
+    $imageData = file_get_contents('image.jpg');
+    $result = $geminiAPI->generateContent(null, $imageData);
     ```
 
 4. The result will contain the concatenated 'text' parts from the API response:
@@ -26,11 +36,14 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
     echo $result;
     ```
 
-## Important Note
+## Important Notes
 
-Ensure that cURL is enabled in your PHP configuration.
+- Ensure that cURL is enabled in your PHP configuration.
+
+- Image data is base64-encoded before being included in the JSON request.
+
+- The maximum width/height for images is 512 pixels.
 
 ## License
 
 This code is provided under the MIT License. See the [LICENSE](LICENSE) file for details.
-

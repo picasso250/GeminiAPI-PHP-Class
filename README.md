@@ -1,6 +1,6 @@
 # GeminiAPI PHP Class
 
-The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on input text and retrieve the most important result from the API response. Additionally, it supports a `vision` method for processing image requests and a `chat` method for engaging in conversational interactions.
+The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on input text and retrieve the most important result from the API response. Additionally, it supports a `vision` method for processing image requests and a `chat` method for engaging in conversational interactions. Two new methods, `embedContent` and `batchEmbedContents`, have been added for content embedding.
 
 ## Usage
 
@@ -70,7 +70,22 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
     echo "Decoded API Response: " . json_encode($geminiAPI->decodedResponse) . "\n";
     ```
 
-This way, the conversation starts with a user message, and subsequent interactions can be easily added by extending the `$conversation` array and passing it to the `chat` method again.
+6. Use the new `embedContent` and `batchEmbedContents` methods for content embedding:
+
+    ```php
+    // Embed a single content
+    $textForEmbedding = "Write a story about a magic backpack.";
+    $result = $geminiAPI->embedContent($textForEmbedding);
+    echo "Embed Content Result: $result\n";
+
+    // Batch embed multiple contents
+    $textsForBatch = [
+        "Write a story about a magic backpack.",
+        "Describe a beautiful sunset over the mountains."
+    ];
+    $results = $geminiAPI->batchEmbedContents($textsForBatch);
+    echo "Batch Embed Contents Result: $results\n";
+    ```
 
 ## Important Note
 

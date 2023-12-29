@@ -1,16 +1,19 @@
 <?php
 
-class GeminiAPI {
+class GeminiAPI
+{
 
     private $api_key;
     public $decodedResponse;
     public $history;
 
-    public function __construct($api_key) {
+    public function __construct($api_key)
+    {
         $this->api_key = $api_key;
     }
 
-    public function generateContent($text) {
+    public function generateContent($text)
+    {
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $this->api_key;
 
         $data = array(
@@ -25,10 +28,13 @@ class GeminiAPI {
             )
         );
 
-        return $this->sendRequest($url, $data);
+        $this->sendRequest($url, $data);
+
+        return $this->getMostImportantResult();
     }
 
-    public function vision($text, $imageContents) {
+    public function vision($text, $imageContents)
+    {
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=' . $this->api_key;
 
         $imageData = base64_encode($imageContents);
@@ -51,20 +57,77 @@ class GeminiAPI {
             )
         );
 
-        return $this->sendRequest($url, $data);
+        $this->sendRequest($url, $data);
+
+        return $this->getMostImportantResult();
     }
 
-    public function chat($conversation) {
+    public function chat($conversation)
+    {
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $this->api_key;
 
         $data = array(
             'contents' => $conversation
         );
 
-        return $this->sendRequest($url, $data);
+        $this->sendRequest($url, $data);
+
+        // Set $this->history only for the chat method
+        $this->history = $this->decodedResponse['candidates'][0]['content'];
+
+        return $this->getMostImportantResult();
     }
 
-    private function sendRequest($url, $data) {
+    public function embedContent($text)
+    {
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent?key=' . $this->api_key;
+
+        $data = array(
+            'model' => 'models/embedding-001',
+            'content' => array(
+                'parts' => array(
+                    array(
+                        'text' => $text
+                    )
+                )
+            )
+        );
+
+        $this->sendRequest($url, $data);
+
+        return $this->decodedResponse;
+    }
+
+    public function batchEmbedContents($texts)
+    {
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/embedding-001:batchEmbedContents?key=' . $this->api_key;
+
+        $requests = array();
+
+        foreach ($texts as $text) {
+            $requests[] = array(
+                'model' => 'models/embedding-001',
+                'content' => array(
+                    'parts' => array(
+                        array(
+                            'text' => $text
+                        )
+                    )
+                )
+            );
+        }
+
+        $data = array(
+            'requests' => $requests
+        );
+
+        $this->sendRequest($url, $data);
+
+        return $this->decodedResponse;
+    }
+
+    private function sendRequest($url, $data)
+    {
         $json_data = json_encode($data);
 
         $headers = array(
@@ -90,13 +153,10 @@ class GeminiAPI {
         if ($this->decodedResponse === null) {
             throw new Exception('Unable to decode JSON response');
         }
-
-        $this->history = $this->decodedResponse['candidates'][0]['content'];
-
-        return $this->getMostImportantResult();
     }
 
-    private function getMostImportantResult() {
+    private function getMostImportantResult()
+    {
         if (isset($this->decodedResponse['candidates'][0]['content']['parts'])) {
             $textParts = $this->decodedResponse['candidates'][0]['content']['parts'];
 

@@ -1,6 +1,6 @@
 # GeminiAPI PHP Class
 
-The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on input text and retrieve the most important result from the API response. Additionally, it supports a `vision` method for processing image requests and a `chat` method for engaging in conversational interactions. Two new methods, `embedContent` and `batchEmbedContents`, have been added for content embedding.
+The GeminiAPI PHP class provides a convenient way to interact with the Gemini language model API. It allows you to generate content based on input text and retrieve the most important result from the API response. Additionally, it supports a `vision` method for processing image requests and a `chat` method for engaging in conversational interactions. Two new methods, `embedContent` and `batchEmbedContents`, have been added for content embedding. A new method, `countTokens`, has been introduced to count the tokens in the generated content.
 
 ## Usage
 
@@ -85,6 +85,15 @@ The GeminiAPI PHP class provides a convenient way to interact with the Gemini la
     ];
     $results = $geminiAPI->batchEmbedContents($textsForBatch);
     echo "Batch Embed Contents Result: $results\n";
+    ```
+
+7. Use the `countTokens` method to count the tokens in the generated content:
+
+    ```php
+    // Count tokens for a given text
+    $textForTokenCount = "Write a story about a magic backpack.";
+    $totalTokens = $geminiAPI->countTokens($textForTokenCount);
+    echo "Total Tokens: $totalTokens\n";
     ```
 
 ## Important Note

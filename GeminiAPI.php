@@ -126,6 +126,36 @@ class GeminiAPI
         return $this->decodedResponse;
     }
 
+    public function countTokens($text)
+    {
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:countTokens?key=' . $this->api_key;
+
+        $data = array(
+            'contents' => array(
+                array(
+                    'parts' => array(
+                        array(
+                            'text' => $text
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->sendRequest($url, $data);
+
+        return $this->getTotalTokens();
+    }
+
+    private function getTotalTokens()
+    {
+        if (isset($this->decodedResponse['totalTokens'])) {
+            return (int)$this->decodedResponse['totalTokens'];
+        } else {
+            return null;
+        }
+    }
+
     private function sendRequest($url, $data)
     {
         $json_data = json_encode($data);
